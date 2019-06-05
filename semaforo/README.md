@@ -1,4 +1,4 @@
-#Simulador de funcionamento de Semaforo
+Simulador de funcionamento de Semaforo
 
 Discente: Thiago Fernandes Ribeiro   RA:120160
 
