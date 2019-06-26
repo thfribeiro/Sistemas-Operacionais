@@ -63,6 +63,16 @@ def Janta():#semaforo, seleciona o proximo e escalonamento pq ele vai escolher o
             if not GarfoEsquerdo and not GarfoDireito: #dois garfos falsos = LIVRES
                 Thread(target=Comer, args=(filosofo,)).start()
 
+        filosofo = random.choice(filosofos)
+
+        if filosofo.comendo == False and filosofo.comeu == False:
+            GarfoEsquerdo = GetGarfoEsquerdo(filosofo)
+            GarfoDireito = GetGarfoDireito(filosofo)
+
+            if not GarfoEsquerdo and not GarfoDireito: #dois garfos falsos = LIVRES
+                Thread(target=Comer, args=(filosofo,)).start()
+
+
 
         time.sleep(5)
         Janta()
