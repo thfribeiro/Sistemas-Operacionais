@@ -12,10 +12,10 @@ n=0
 
 
 class Filosofo():
-    def __init__(self, nome):
+    def __init__(self, nome, id):
         self.nome = nome
+        self.id = id
         self.comendo = False
-        self.comeu = False
         self.nVezes = 0
 
 
@@ -28,66 +28,108 @@ def Comer(filosofo):
     time.sleep(5)
 
     filosofo.comendo = False
-    filosofo.comeu = True
     SetGarfoEsquerdo(filosofo, False)
     SetGarfoDireito(filosofo, False)
 
-
-def TodosJaComeram():
-    for filosofo in filosofos:
-        if not filosofo.comeu:
-            return False
-    return True
-
-
-def NovoCiclo():
-    for filosofo in filosofos:
-        filosofo.comeu =False
-
-
-
 def Janta():#semaforo, seleciona o proximo e escalonamento pq ele vai escolher o prox
     global n
-    if(n<=40):
-        n+=1
+    if n <= 40:
+        n += 1
 
-        if TodosJaComeram():#timesharing, ele so vai comer denovo quando todos os outros estiverem comidos
-            NovoCiclo();
+        nFilosofo = random.randrange(1, 6)
 
-        filosofo = random.choice(filosofos)
+        if nFilosofo == 1:
+            for filosofo in filosofos:
+                if filosofo.id == nFilosofo:
+                    filosofo1 = filosofo
 
-        if filosofo.comendo == False and filosofo.comeu == False:
-            GarfoEsquerdo = GetGarfoEsquerdo(filosofo)
-            GarfoDireito = GetGarfoDireito(filosofo)
+            nFilosofo2 = random.randrange(1, 3)
 
-            if not GarfoEsquerdo and not GarfoDireito: #dois garfos falsos = LIVRES
-                Thread(target=Comer, args=(filosofo,)).start()
+            if nFilosofo2 == 1:
+                for filosofo in filosofos:
+                    if filosofo.id == 4:
+                        filosofo2 = filosofo
+            elif nFilosofo2 == 2:
+                for filosofo in filosofos:
+                    if filosofo.id == 3:
+                        filosofo2 = filosofo
 
-        filosofo = random.choice(filosofos)
+        elif nFilosofo == 2:
+            for filosofo in filosofos:
+                if filosofo.id == nFilosofo:
+                    filosofo1 = filosofo
 
-        if filosofo.comendo == False and filosofo.comeu == False:
-            GarfoEsquerdo = GetGarfoEsquerdo(filosofo)
-            GarfoDireito = GetGarfoDireito(filosofo)
+            nFilosofo2 = random.randrange(1, 3)
 
-            if not GarfoEsquerdo and not GarfoDireito: #dois garfos falsos = LIVRES
-                Thread(target=Comer, args=(filosofo,)).start()
+            if nFilosofo2 == 1:
+                for filosofo in filosofos:
+                    if filosofo.id == 5:
+                        filosofo2 = filosofo
+            elif nFilosofo2 == 2:
+                for filosofo in filosofos:
+                    if filosofo.id == 4:
+                        filosofo2 = filosofo
+
+        elif nFilosofo == 3:
+            for filosofo in filosofos:
+                if filosofo.id == nFilosofo:
+                    filosofo1 = filosofo
+
+            nFilosofo2 = random.randrange(1, 3)
+
+            if nFilosofo2 == 1:
+                for filosofo in filosofos:
+                    if filosofo.id == 1:
+                        filosofo2 = filosofo
+            elif nFilosofo2 == 2:
+                for filosofo in filosofos:
+                    if filosofo.id == 5:
+                        filosofo2 = filosofo
+
+        elif nFilosofo == 4:
+            for filosofo in filosofos:
+                if filosofo.id == nFilosofo:
+                    filosofo1 = filosofo
+
+            nFilosofo2 = random.randrange(1, 3)
+
+            if nFilosofo2 == 1:
+                for filosofo in filosofos:
+                    if filosofo.id == 2:
+                        filosofo2 = filosofo
+            elif nFilosofo2 == 2:
+                for filosofo in filosofos:
+                    if filosofo.id == 1:
+                        filosofo2 = filosofo
+
+        elif nFilosofo == 5:
+            for filosofo in filosofos:
+                if filosofo.id == nFilosofo:
+                    filosofo1 = filosofo
+
+            nFilosofo2 = random.randrange(1, 3)
+
+            if nFilosofo2 == 1:
+                for filosofo in filosofos:
+                    if filosofo.id == 3:
+                        filosofo2 = filosofo
+            elif nFilosofo2 == 2:
+                for filosofo in filosofos:
+                    if filosofo.id == 2:
+                        filosofo2 = filosofo
 
 
 
-        time.sleep(5)
-        Janta()
-    else:
-        for filosofo in filosofos:
-            print(filosofo.nome, " comeu ", filosofo.nVezes, " vezes")
+        if filosofo1.comendo == False and filosofo2.comendo == False:
+            GarfoEsquerdo1 = GetGarfoEsquerdo(filosofo1)
+            GarfoDireito1 = GetGarfoDireito(filosofo1)
+            GarfoEsquerdo2 = GetGarfoEsquerdo(filosofo2)
+            GarfoDireito2 = GetGarfoDireito(filosofo2)
 
-        sys.exit()
+            if not GarfoEsquerdo1 and not GarfoDireito1 and not GarfoEsquerdo2 and not GarfoDireito2: #dois garfos falsos = LIVRES
+                Thread(target=Comer, args=(filosofo1,)).start()
+                Thread(target=Comer, args=(filosofo2,)).start()
 
-
-
-
-def Tela():
-    global n
-    while n<=40:
 
         print('')
         print('----------------------')
@@ -101,9 +143,17 @@ def Tela():
                 estado = 'esta pensando'
             print(filosofo.nome, estado)
 
-
         time.sleep(5)
+        Janta()
+    else:
+        print('')
+        print('----------------------')
+        print('')
 
+        for filosofo in filosofos:
+            print(filosofo.nome, " comeu ", filosofo.nVezes, " vezes")
+
+        sys.exit()
 
 
 def SetGarfoEsquerdo(filosofo, garfo):
@@ -139,11 +189,10 @@ if __name__ == '__main__':
     garfos.append(False)
     garfos.append(False)
 
-    filosofos.append(Filosofo('Aristóteles'))
-    filosofos.append(Filosofo('Descartes'))
-    filosofos.append(Filosofo('Platão'))
-    filosofos.append(Filosofo('Pitágoras'))
-    filosofos.append(Filosofo('Euclides'))
+    filosofos.append(Filosofo('Aristóteles', 1))
+    filosofos.append(Filosofo('Descartes', 2))
+    filosofos.append(Filosofo('Platão', 3))
+    filosofos.append(Filosofo('Pitágoras', 4))
+    filosofos.append(Filosofo('Euclides', 5))
 
-    Thread(target=Tela, args=()).start() ##paralela
     Janta()
