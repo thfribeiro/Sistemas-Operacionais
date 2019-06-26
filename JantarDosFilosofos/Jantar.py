@@ -1,18 +1,14 @@
-import collections
-import sys
+
 import time
 import random
-from enum import Enum
-import datetime
-import threading
+import sys
 from threading import Thread
 
-import os
-import multiprocessing
+
 
 filosofos = []
 garfos = []
-n = 0
+n=0
 
 
 class Filosofo():
@@ -41,7 +37,7 @@ def TodosJaComeram():
     for filosofo in filosofos:
         if not filosofo.comeu:
             return False
-    return 1
+    return True
 
 
 def NovoCiclo():
@@ -50,27 +46,38 @@ def NovoCiclo():
 
 
 
-def Jantar():#semaforo, seleciona o proximo e escalonamento pq ele vai escolher o prox
+def Janta():#semaforo, seleciona o proximo e escalonamento pq ele vai escolher o prox
+    global n
+    if(n<=40):
+        n+=1
 
-    if TodosJaComeram() <= 2:#timesharing, ele so vai comer denovo quando todos os outros estiverem comidos
-        NovoCiclo();
+        if TodosJaComeram():#timesharing, ele so vai comer denovo quando todos os outros estiverem comidos
+            NovoCiclo();
 
-    filosofo = random.choice(filosofos)
+        filosofo = random.choice(filosofos)
 
-    if filosofo.comendo == False and filosofo.comeu == False:
-        GarfoEsquerdo = GetGarfoEsquerdo(filosofo)
-        GarfoDireito = GetGarfoDireito(filosofo)
+        if filosofo.comendo == False and filosofo.comeu == False:
+            GarfoEsquerdo = GetGarfoEsquerdo(filosofo)
+            GarfoDireito = GetGarfoDireito(filosofo)
 
-        if not GarfoEsquerdo and not GarfoDireito: #dois garfos falsos = LIVRES
-            Thread(target=Comer, args=(filosofo,)).start()
+            if not GarfoEsquerdo and not GarfoDireito: #dois garfos falsos = LIVRES
+                Thread(target=Comer, args=(filosofo,)).start()
 
 
-    time.sleep(5)
-    Jantar()
+        time.sleep(5)
+        Janta()
+    else:
+        for filosofo in filosofos:
+            print(filosofo.nome, " comeu ", filosofo.nVezes, " vezes")
+
+        sys.exit()
+
+
 
 
 def Tela():
-    while True:
+    global n
+    while n<=40:
 
         print('')
         print('----------------------')
@@ -82,7 +89,7 @@ def Tela():
                 estado = 'esta comendo'
             else:
                 estado = 'esta pensando'
-            print(filosofo.nome, estado, filosofo.nVezes)
+            print(filosofo.nome, estado)
 
 
         time.sleep(5)
@@ -129,4 +136,4 @@ if __name__ == '__main__':
     filosofos.append(Filosofo('Euclides'))
 
     Thread(target=Tela, args=()).start() ##paralela
-    Jantar()
+    Janta()
